@@ -1,10 +1,14 @@
-module "public_sg" {
+###########################################################
+# Public Security Group
+###########################################################
+
+module "devops_public_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 6.0"
 
   name            = "devops-public-sg"
   use_name_prefix = false
-  vpc_id          = module.vpc.vpc_id
+  vpc_id          = aws_vpc.devops_vpc.id
 
   ingress_rules = {
     http = {
@@ -28,18 +32,20 @@ module "public_sg" {
     all = { cidr_ipv4 = "0.0.0.0/0", ip_protocol = "-1" }
   }
 
-  tags = {
-    Name = "devops-public-sg"
-  }
+  tags = { Name = "devops-public-sg" }
 }
 
-module "private_sg" {
+###########################################################
+# Private Security Group
+###########################################################
+
+module "devops_private_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 6.0"
 
   name            = "devops-private-sg"
   use_name_prefix = false
-  vpc_id          = module.vpc.vpc_id
+  vpc_id          = aws_vpc.devops_vpc.id
 
   ingress_rules = {
     ssh = {
@@ -56,7 +62,5 @@ module "private_sg" {
     all = { cidr_ipv4 = "0.0.0.0/0", ip_protocol = "-1" }
   }
 
-  tags = {
-    Name = "devops-private-sg"
-  }
+  tags = { Name = "devops-private-sg" }
 }
