@@ -1,41 +1,92 @@
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 6.0"
+###########################################################
+# VPC
+###########################################################
+resource "aws_vpc" "devops_vpc" {
+  cidr_block = "10.0.0.0/24"
+  tags       = { Name = "devops-vpc" }
+}
 
-  name = "devops-vpc"
-  cidr = "10.0.0.0/24"
-  azs  = ["ap-southeast-1a"]
+###########################################################
+# Internet Gateway
+###########################################################
+resource "aws_internet_gateway" "devops_igw" {
+  vpc_id = aws_vpc.devops_vpc.id
+  tags   = { Name = "devops-igw" }
+}
 
-  public_subnets       = ["10.0.0.0/25"]
-  public_subnet_names  = ["devops-public-subnet"]
-  public_subnet_suffix = "public-route"
+###########################################################
+# Public Subnet
+###########################################################
+resource "aws_subnet" "devops_public_subnet" {
+  vpc_id                  = aws_vpc.devops_vpc.id
+  cidr_block              = "10.0.0.0/25"
+  availability_zone       = var.az
+  map_public_ip_on_launch = false
+  tags                    = { Name = "devops-public-subnet" }
+}
 
-  private_subnets       = ["10.0.0.128/25"]
-  private_subnet_names  = ["devops-private-subnet"]
-  private_subnet_suffix = "private-route"
+###########################################################
+# Public Route Table
+###########################################################
+resource "aws_route_table" "devops_public_route_table" {
+  vpc_id = aws_vpc.devops_vpc.id
+  tags   = { Name = "devops-public-route-table" }
+}
 
-  create_igw = true
+resource "aws_route" "devops_public_route" {
+  route_table_id         = aws_route_table.devops_public_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.devops_igw.id
+}
 
-  igw_tags = {
-    Name = "devops-igw"
-  }
+resource "aws_route_table_association" "devops_public_link" {
+  subnet_id      = aws_subnet.devops_public_subnet.id
+  route_table_id = aws_route_table.devops_public_route_table.id
+}
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
+###########################################################
+# Elastic IP for NAT Gateway
+###########################################################
+resource "aws_eip" "devops_nat_eip" {
+  domain = "vpc"
+  tags   = { Name = "devops-nat-eip" }
+}
 
-  nat_gateway_tags = {
-    Name = "devops-ngw"
-  }
+###########################################################
+# NAT Gateway
+###########################################################
+resource "aws_nat_gateway" "devops_ngw" {
+  allocation_id = aws_eip.devops_nat_eip.id
+  subnet_id     = aws_subnet.devops_public_subnet.id
+  depends_on    = [aws_internet_gateway.devops_igw]
+  tags          = { Name = "devops-ngw" }
+}
 
-  nat_eip_tags = {
-    Name = "devops-ngw-eip"
-  }
+###########################################################
+# Private Subnet
+###########################################################
+resource "aws_subnet" "devops_private_subnet" {
+  vpc_id            = aws_vpc.devops_vpc.id
+  cidr_block        = "10.0.0.128/25"
+  availability_zone = var.az
+  tags              = { Name = "devops-private-subnet" }
+}
 
-  map_public_ip_on_launch = true
-  enable_dns_hostnames    = true
-  enable_dns_support      = true
+###########################################################
+# Private Route Table
+###########################################################
+resource "aws_route_table" "devops_private_route_table" {
+  vpc_id = aws_vpc.devops_vpc.id
+  tags   = { Name = "devops-private-route-table" }
+}
 
-  tags = {
-    Name = "devops-vpc"
-  }
+resource "aws_route" "devops_private_route" {
+  route_table_id         = aws_route_table.devops_private_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.devops_ngw.id
+}
+
+resource "aws_route_table_association" "devops_private_link" {
+  subnet_id      = aws_subnet.devops_private_subnet.id
+  route_table_id = aws_route_table.devops_private_route_table.id
 }

@@ -7,6 +7,7 @@ terraform {
     }
   }
   backend "s3" {
+    # S3 bucket for storing Terraform state
     bucket       = "devops-bootcamp-terraform-hafifi"
     key          = "terraform/terraform.tfstate"
     region       = "ap-southeast-1"
