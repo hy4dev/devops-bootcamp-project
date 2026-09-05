@@ -39,7 +39,7 @@ module "web_server" {
   vpc_security_group_ids      = [module.devops_public_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
-  user_data = templatefile("userdata.sh", {})
+  #user_data = templatefile("userdata.sh", {})
   tags = {
     Name = "devops-web-server"
     Role = "web"
@@ -88,9 +88,9 @@ module "monitoring_server" {
   vpc_security_group_ids      = [module.devops_private_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
-  user_data = templatefile("userdata-tunnel.sh", {
-    tunnel_token = data.aws_ssm_parameter.token.value
-  })
+  #user_data = templatefile("userdata-tunnel.sh", {
+  #  tunnel_token = data.aws_ssm_parameter.token.value
+  #})
 
   tags = {
     Name = "devops-monitoring-server"

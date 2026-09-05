@@ -1,0 +1,49 @@
+#################################################
+# All
+#################################################
+
+[all]
+devops-web-server
+devops-controller-server
+devops-monitoring-server
+
+[all:vars]
+ansible_connection=amazon.aws.aws_ssm
+ansible_aws_ssm_region=ap-southeast-1
+ansible_aws_ssm_bucket_name=devops-ansible-ssm-hafifi
+ansible_user=ssm-user
+
+#################################################
+# Web
+#################################################
+
+[web]
+devops-web-server ansible_host=${web_instance_id} 
+
+[web:vars]
+private_ip=${web_private_ip}
+
+#################################################
+# Controller
+#################################################
+
+[controller]
+devops-controller-server ansible_host=${controller_instance_id} 
+
+[controller:vars]
+private_ip=${controller_private_ip}
+
+#################################################
+# Monitoring
+#################################################
+
+[monitoring]
+devops-monitoring-server ansible_host=${monitoring_instance_id} 
+
+[monitoring:vars]
+private_ip=${monitoring_private_ip}
+
+# Use below in case of SSM-Ansible session does not able to execute tasks with elevated privileges 
+#ansible_become=true
+#ansible_become_method=sudo
+#ansible_become_user=root
