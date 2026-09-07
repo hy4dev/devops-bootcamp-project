@@ -1,3 +1,6 @@
+# Note: SSH connection is added to the ingress rule but as per requirement, only SSM is used.
+# To use SSH, ec2.tf must be modified by adding "key_name" to every AMI.  
+
 ###########################################################
 # Public Security Group
 ###########################################################
@@ -12,7 +15,6 @@ module "devops_public_sg" {
 
   ingress_rules = {
     http = {
-      description = "HTTP from Internet"
       cidr_ipv4   = "0.0.0.0/0"
       ip_protocol = "tcp"
       from_port   = 80
@@ -20,12 +22,20 @@ module "devops_public_sg" {
     }
 
     node_exporter = {
-      description = "Node_exporter from monitoring server"
       cidr_ipv4   = "10.0.0.136/32"
       ip_protocol = "tcp"
       from_port   = 9100
       to_port     = 9100
     }
+
+    ssh = {
+      description = "SSH from subnet VPC"
+      cidr_ipv4   = "10.0.0.128/25"
+      ip_protocol = "tcp"
+      from_port   = 22
+      to_port     = 22
+    }
+
   }
 
   egress_rules = {
@@ -49,8 +59,8 @@ module "devops_private_sg" {
 
   ingress_rules = {
     ssh = {
-      cidr_ipv4   = "10.0.0.0/24"
-      description = "SSH from VPC"
+      description = "SSH from public subnet"
+      cidr_ipv4   = "10.0.0.0/25"
       ip_protocol = "tcp"
       from_port   = 22
       to_port     = 22
