@@ -64,6 +64,7 @@ module "controller_server" {
   create_security_group       = false
   vpc_security_group_ids      = [module.devops_private_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
+  user_data                   = templatefile("controller-set-up.sh")
 
   tags = {
     Name = "devops-controller-server"
