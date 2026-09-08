@@ -1,4 +1,4 @@
-- name: Pasang node_exporter
+- name: Set up node_exporter
   hosts: web
   become: true
   roles:

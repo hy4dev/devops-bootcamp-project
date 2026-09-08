@@ -1,28 +1,50 @@
+- name: Intall AWS CLI
+  hosts: 
+    - web
+  become: true
+  vars:
+    aws_region: "ap-southeast-1"
+  tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - unzip
+          - curl
+        state: present
+        update_cache: true
+    - name: Download AWS CLI v2
+      ansible.builtin.get_url:
+        url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: "/tmp/awscliv2.zip"
+        mode: "0644"
+    - name: Extract AWS CLI v2
+      ansible.builtin.unarchive:
+        src: "/tmp/awscliv2.zip"
+        dest: "/tmp"
+        remote_src: true
+        creates: "/tmp/aws"
+    - name: Install AWS CLI v2
+      ansible.builtin.command:
+        cmd: "/tmp/aws/install"
+        creates: "/usr/local/bin/aws"
+
 - name: Deploy private ECR based web application to EC2
   hosts: web
   become: true
-
   vars:
-
     docker_users:
       - ubuntu
       - ssm-user
-
     aws_region: "ap-southeast-1"
-
     ecr_registry: "287347870001.dkr.ecr.ap-southeast-1.amazonaws.com"
     ecr_repository: "devops-bootcamp/final-project-hafifi"
     image_tag: "v1.0.0"
-
     container_name: "devops-final-project"
     container_port: 80
     host_port: 80
-
   roles:
     - geerlingguy.docker
-
   tasks:
-
     - name: Login to Amazon ECR
       become_user: ssm-user
       ansible.builtin.shell:
@@ -34,13 +56,11 @@
           --password-stdin
           {{ ecr_registry }}
       no_log: true
-
     - name: Pull application image
       become_user: ssm-user
       community.docker.docker_image:
         name: "{{ ecr_registry }}/{{ ecr_repository }}:{{ image_tag }}"
         source: pull
-
     - name: Run application container
       community.docker.docker_container:
         name: "{{ container_name }}"
@@ -49,3 +69,9 @@
         restart_policy: unless-stopped
         published_ports:
           - "{{ host_port }}:{{ container_port }}"
+
+- name: Set up node exporter
+  hosts: web
+  become: true
+  roles:
+    - prometheus.prometheus.node_exporter

@@ -9,22 +9,18 @@
     - geerlingguy.docker
   
   tasks:
-    
     - name: Create monitoring stack folder
       file:
         path: /opt/monitoring
         state: directory
-    
     - name: Copy prometheus.yaml
       copy:
         src: prometheus.yaml
         dest: /opt/monitoring/prometheus.yaml
-    
     - name: Copy compose.yaml
       copy:
         src: compose.yaml
         dest: /opt/monitoring/compose.yaml
-    
     - name: Bring up container
       command: docker compose up -d
       args:
