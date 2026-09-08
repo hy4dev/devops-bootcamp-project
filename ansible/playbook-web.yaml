@@ -1,18 +1,51 @@
-- name: Sediakan web server
+- name: Deploy private ECR based web application to EC2
   hosts: web
-  become: yes
+  become: true
+
+  vars:
+
+    docker_users:
+      - ubuntu
+      - ssm-user
+
+    aws_region: "ap-southeast-1"
+
+    ecr_registry: "287347870001.dkr.ecr.ap-southeast-1.amazonaws.com"
+    ecr_repository: "devops-bootcamp/final-project-hafifi"
+    image_tag: "v1.0.0"
+
+    container_name: "devops-final-project"
+    container_port: 80
+    host_port: 80
+
+  roles:
+    - geerlingguy.docker
+
   tasks:
-    - name: Pasang nginx
-      apt:
-        name: nginx
-        state: present
-        update_cache: yes
-    - name: Hidupkan servis nginx
-      service:
-        name: nginx
+
+    - name: Login to Amazon ECR
+      become_user: ssm-user
+      ansible.builtin.shell:
+        cmd: >
+          aws ecr get-login-password
+          --region {{ aws_region }}
+          | docker login
+          --username AWS
+          --password-stdin
+          {{ ecr_registry }}
+      no_log: true
+
+    - name: Pull application image
+      become_user: ssm-user
+      community.docker.docker_image:
+        name: "{{ ecr_registry }}/{{ ecr_repository }}:{{ image_tag }}"
+        source: pull
+
+    - name: Run application container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ ecr_registry }}/{{ ecr_repository }}:{{ image_tag }}"
         state: started
-        enabled: yes
-    - name: Tulis index.html
-      copy:
-        content: "Ini {{ inventory_hostname }}\n"
-        dest: /var/www/html/index.html
+        restart_policy: unless-stopped
+        published_ports:
+          - "{{ host_port }}:{{ container_port }}"
