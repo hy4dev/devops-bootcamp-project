@@ -1,0 +1,8 @@
+- name: Install all requirements for controller server
+  hosts: controller
+  become: true
+  roles:
+    - geerlingguy.docker
+  collections:
+    - prometheus.prometheus
+    - community.aws

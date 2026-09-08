@@ -2,6 +2,7 @@
   hosts: all
   become: true
   tasks:
+    
     - name: Besarkan partition
       command: growpart /dev/nvme0n1 1
       register: partition_grow

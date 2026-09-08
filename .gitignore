@@ -38,4 +38,14 @@ override.tf.json
 terraform.rc
 
 # End of https://www.toptal.com/developers/gitignore/api/terraforminventory.ini
+
+# Added for Ansible
 inventory.ini
+
+# Added for app (node.js based)
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+.env.*
