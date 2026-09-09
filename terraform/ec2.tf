@@ -39,12 +39,22 @@ module "web_server" {
   vpc_security_group_ids      = [module.devops_public_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
+  user_data = templatefile("controller-set-up.sh", {})
+
   tags = {
     Name = "devops-web-server"
     Role = "web"
   }
 
-  root_block_device = { size = 16 }
+  root_block_device = {
+    size = 16
+  }
+
+  depends_on = [
+    aws_subnet.devops_private_subnet,
+    module.devops_private_sg,
+    aws_nat_gateway.devops_ngw
+  ]
 }
 
 ###########################################################
@@ -66,12 +76,22 @@ module "controller_server" {
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
   user_data                   = templatefile("controller-set-up.sh")
 
+  user_data = templatefile("controller-set-up.sh", {})
+
   tags = {
     Name = "devops-controller-server"
     Role = "controller"
   }
 
-  root_block_device = { size = 16 }
+  root_block_device = {
+    size = 16
+  }
+
+  depends_on = [
+    aws_subnet.devops_private_subnet,
+    module.devops_private_sg,
+    aws_nat_gateway.devops_ngw
+  ]
 }
 
 ###########################################################
@@ -92,10 +112,20 @@ module "monitoring_server" {
   vpc_security_group_ids      = [module.devops_private_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
+  user_data = templatefile("controller-set-up.sh", {})
+
   tags = {
     Name = "devops-monitoring-server"
     Role = "monitoring"
   }
 
-  root_block_device = { size = 16 }
+  root_block_device = {
+    size = 16
+  }
+
+  depends_on = [
+    aws_subnet.devops_private_subnet,
+    module.devops_private_sg,
+    aws_nat_gateway.devops_ngw
+  ]
 }

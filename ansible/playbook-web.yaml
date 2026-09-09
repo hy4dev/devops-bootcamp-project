@@ -55,7 +55,7 @@
           --username AWS
           --password-stdin
           {{ ecr_registry }}
-      no_log: true
+      no_log: false
     - name: Pull application image
       become_user: ssm-user
       community.docker.docker_image:
@@ -73,5 +73,7 @@
 - name: Set up node exporter
   hosts: web
   become: true
+  vars:
+    node_exporter_local_cache_path: "/tmp/node_exporter"
   roles:
     - prometheus.prometheus.node_exporter
