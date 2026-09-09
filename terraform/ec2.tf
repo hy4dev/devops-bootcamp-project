@@ -39,7 +39,7 @@ module "web_server" {
   vpc_security_group_ids      = [module.devops_public_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
-  user_data = templatefile("controller-set-up.sh", {})
+  user_data = templatefile("servers-set-up.sh", {})
 
   tags = {
     Name = "devops-web-server"
@@ -74,9 +74,8 @@ module "controller_server" {
   create_security_group       = false
   vpc_security_group_ids      = [module.devops_private_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
-  user_data                   = templatefile("controller-set-up.sh")
 
-  user_data = templatefile("controller-set-up.sh", {})
+  user_data = templatefile("servers-set-up.sh", {})
 
   tags = {
     Name = "devops-controller-server"
@@ -112,7 +111,7 @@ module "monitoring_server" {
   vpc_security_group_ids      = [module.devops_private_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
-  user_data = templatefile("controller-set-up.sh", {})
+  user_data = templatefile("servers-set-up.sh", {})
 
   tags = {
     Name = "devops-monitoring-server"
