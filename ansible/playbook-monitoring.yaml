@@ -1,13 +1,12 @@
 - name: Bring up monitoring stack
   hosts: monitoring
   become: true
-  
   vars:
-    docker_users: [ubuntu]
-  
+    docker_users:
+      - ubuntu
+      - ssm-user 
   roles:
     - geerlingguy.docker
-  
   tasks:
     - name: Create monitoring stack folder
       file:
