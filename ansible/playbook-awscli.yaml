@@ -1,58 +1,25 @@
-- name: Intall AWS CLI
-  hosts: 
-    - web
-    - controller
+- name: Install AWS CLI
+  hosts: all
   become: true
-
-  vars:
-    aws_region: "ap-southeast-1"
-
   tasks:
-
     - name: Install required packages
       ansible.builtin.apt:
         name:
           - unzip
-          - curl
         state: present
         update_cache: true
-
     - name: Download AWS CLI v2
       ansible.builtin.get_url:
         url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
         dest: "/tmp/awscliv2.zip"
         mode: "0644"
-
     - name: Extract AWS CLI v2
       ansible.builtin.unarchive:
         src: "/tmp/awscliv2.zip"
         dest: "/tmp"
         remote_src: true
         creates: "/tmp/aws"
-
     - name: Install AWS CLI v2
       ansible.builtin.command:
         cmd: "/tmp/aws/install"
         creates: "/usr/local/bin/aws"
-
-- name: Install Ansible
-  hosts:
-    - controller
-  become: true
-
-  tasks:
-    - name: Install Ansible
-      ansible.builtin.apt:
-        name: ansible
-        state: present
-        update_cache: true
-
-    - name: Verify Ansible installation
-      ansible.builtin.command:
-        cmd: ansible --version
-      register: ansible_version
-      changed_when: false
-
-    - name: Show Ansible version
-      ansible.builtin.debug:
-        var: ansible_version.stdout
