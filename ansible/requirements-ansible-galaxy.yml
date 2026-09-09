@@ -1,0 +1,5 @@
+roles:
+  - name: geerlingguy.docker
+collections:
+  - name: amazon.aws
+  - name: prometheus.prometheus
