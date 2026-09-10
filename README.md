@@ -54,7 +54,7 @@ ii. Policy Type - Customer Managed
  }
  ```
 
-3. Add you domain to Cloudflare, create a record for sub-domain *web*, and create a tunnel (type as cloudflared) for sub-domain *monitoring*. In this project, the respective urls are `web.hy4dev.com` and `monitoring.hy4dev.com`. Please note, these urls may not live all the time as it serves for the bootcamp project only (temporary).
+3. Add your domain to Cloudflare, create a record for sub-domain *web*, and create a tunnel (type as cloudflared) for sub-domain *monitoring*. In this project, the respective urls are `web.hy4dev.com` and `monitoring.hy4dev.com`. Please note, these urls may not live all the time as it serves for the bootcamp project only (temporary).
 
 4. Create an S3 bucket for Terraform state file, *tfstate*. Please refer to *providers.tf* for the details and change the particular fields to match with the bucket that you created from AWS console.
 
