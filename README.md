@@ -27,6 +27,8 @@ Please note that only web server is exposed to the public. So, it allows HTTP co
 
 <u>Policy Type - Customer Managed</u>
 - Please use the JSON below and you may named it "Ansible-SSM-Access".
+
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
