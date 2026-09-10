@@ -82,23 +82,26 @@ ii. Policy Type - Customer Managed
 
 9. Since this is just a small project, please copy the content of *inventory.ini* that can be found from local machine and paste it to the newly created *inventory.ini* in ansible folder of controller server.
 
-10. Run `ansible-playbook playbook-awscli.yaml`.
+10. Run `ansible-playbook playbook-awscli.yaml` and verify the installation.
+    - `aws --version`
 
-11. Run `ansible-galaxy install -r requirements-ansible-galaxy.yml`.
+11. Run `ansible-galaxy install -r requirements-ansible-galaxy.yml` and verify the installation. This is to install *geerlingguy.docker*, *amazon.aws*, and *prometheus.prometheus*.
+    - `ansible-galaxy role list`
+    - `ansible-galaxy collection list`
 
-12. Run `ansible-playbook playbook-monitoring.yaml`.
+12. Run `ansible-playbook playbook-monitoring.yaml`. This is to build the monitoring stack on monitoring server that consists of Prometheus and Grafana.
 
-13. Run `ansible-playbook playbook-web.yaml`.
+13. Run `ansible-playbook playbook-web.yaml`. This is to build Docker-based microsite on web server. 
 
 14. Verify whether or not the microsite up and running by `http://{web_server_elastic_ip}:80`.
 
 15. If the microsite is up and running, then open the DNS records of Cloudflare and replace the IP with the latest elastic IP. If the record was not created before, create it and linked the IP to the *web* sub-domain. 
 
-16. Verify the access to the microsite.
+16. Verify the access to the microsite by with the domain name instead of the elastic IP and port.
 
 17. Open the created tunnel from Cloudflare and click `Add a connector` button. If the tunnel was not created before, create a Cloudflared-type tunnel.
 
-18. Select the OS as Debian (as the OS of EC2 is Ubuntu), and you will see the two commands to run.
+18. As the OS of all EC2s is Ubuntu, select the OS as Debian and you will see the two commands to run.
 
 19. Proceed to SSM to monitoring server and run `bash` and `cd`.
 
