@@ -20,39 +20,39 @@ Please note that only web server is exposed to the public. So, it allows HTTP co
 
 2. Since the all communications are on SSM, few adjustments on IAM roles need to be done. This is to accomodate the Ansible command session on SSM and to provide EC2 role the permission to authenticate and pull images from ECR. The role name that used in this project is *EC2-SSM-Role*. If you wanted to use the existing name, then just create the role from AWS console (IAM - Roles) with the policies as shown below:
 
-    i. Policy Type - AWS Managed
-        - AmazonEC2ContainerRegistryReadOnly
-        - AmazonS3FullAccess
-        - AmazonSSMManagedInstanceCore
+i. Policy Type - AWS Managed
+- AmazonEC2ContainerRegistryReadOnly
+- AmazonS3FullAccess
+- AmazonSSMManagedInstanceCore
 
-    ii. Policy Type - Customer Managed
-        - Please use the JSON below and you may named it *Ansible-SSM-Access*.
+ii. Policy Type - Customer Managed
+- Please use the JSON below and you may named it *Ansible-SSM-Access*.
 
-        ```json
-        {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Sid": "AnsibleSSMSession",
-                    "Effect": "Allow",
-                    "Action": [
-                        "ssm:StartSession",
-                        "ssm:TerminateSession",
-                        "ssm:ResumeSession"
-                    ],
-                    "Resource": "*"
-                },
-                {
-                    "Sid": "AnsibleSSMDescribe",
-                    "Effect": "Allow",
-                    "Action": [
-                        "ssm:DescribeInstanceInformation"
-                    ],
-                    "Resource": "*"
-                }
-            ]
-        }
-        ```
+```json
+{
+     "Version": "2012-10-17",
+     "Statement": [
+         {
+             "Sid": "AnsibleSSMSession",
+             "Effect": "Allow",
+             "Action": [
+                 "ssm:StartSession",
+                 "ssm:TerminateSession",
+                 "ssm:ResumeSession"
+             ],
+             "Resource": "*"
+         },
+         {
+             "Sid": "AnsibleSSMDescribe",
+             "Effect": "Allow",
+             "Action": [
+                 "ssm:DescribeInstanceInformation"
+             ],
+             "Resource": "*"
+         }
+     ]
+ }
+ ```
 
 3. Add you domain to Cloudflare, create a record for sub-domain *web*, and create a tunnel (type as cloudflared) for sub-domain *monitoring*. In this project, the respective urls are `web.hy4dev.com` and `monitoring.hy4dev.com`. Please note, these urls may not live all the time as it serves for the bootcamp project only (temporary).
 
