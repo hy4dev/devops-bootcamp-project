@@ -52,6 +52,7 @@ Please note that only web server is exposed to the public. So, it allows HTTP co
         }
     ]
 }
+```
 
 3. Add you domain to Cloudflare, create a record for sub-domain "web", and create a tunnel (type as cloudflared) for sub-domain "monitoring". In this project, the respective urls are web.hy4dev.com and monitoring.hy4dev.com. Please note, these urls may not live all the time as it serves for the bootcamp project only (temporary).
 
