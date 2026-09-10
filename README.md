@@ -91,7 +91,7 @@ ii. Policy Type - Customer Managed
 
 12. Run `ansible-playbook playbook-monitoring.yaml`. This is to build the monitoring stack on monitoring server that consists of Prometheus and Grafana.
 
-13. Run `ansible-playbook playbook-web.yaml`. This is to build Docker-based microsite on web server. 
+13. Run `ansible-playbook playbook-web.yaml`. This is to build Docker-based microsite on web server which the image is pulled from ECR. 
 
 14. Verify whether or not the microsite up and running by `http://{web_server_elastic_ip}:80`.
 
