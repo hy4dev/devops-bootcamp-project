@@ -1,4 +1,4 @@
-- name: Deploy private ECR based web application to EC2
+- name: Deploy private ECR-based microsite to web server
   hosts: web
   become: true
   vars:

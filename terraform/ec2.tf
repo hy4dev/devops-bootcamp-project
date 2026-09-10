@@ -39,6 +39,9 @@ module "web_server" {
   vpc_security_group_ids      = [module.devops_public_sg.id]
   iam_instance_profile        = data.aws_iam_instance_profile.ec2_ssm_profile.name
 
+  # Note: No SSH-key is set as per requirement of the project.
+  # All communications are on SSM.
+
   user_data = templatefile("servers-set-up.sh", {})
 
   tags = {
@@ -49,6 +52,10 @@ module "web_server" {
   root_block_device = {
     size = 16
   }
+
+  # Note: The "depends_on" is to avoid bash script to run before the readiness of the network.
+  # This as the script includes downloading and updating packages.
+  # We observed the timeout and found the script was ran before the readiness of the network.
 
   depends_on = [
     aws_subnet.devops_private_subnet,

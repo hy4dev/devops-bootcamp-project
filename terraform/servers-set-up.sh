@@ -1,8 +1,16 @@
 #!/bin/bash
 
+# Note: The purposes of this script are: 
+# 1. To provide an update to every AMI.
+# 2. To install Ansible and curl to every AMI.
+# 3. To install AWS SSM Session Manager to every AMI.
+
 set -eo pipefail
 
 echo "Starting the tasks..."
+
+# Note: The retry function is to retry the respective update/task if the attempt is failed.
+# Also, the script waits for the network readiness before attempting the update/task.
 
 # Retry function
 retry() {
