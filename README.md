@@ -110,3 +110,11 @@ ii. Policy Type - Customer Managed
 21. If there is no issue, Cloudflare will show status of the tunnel as *Healthy* and you may veriy the access to Grafana.
 
 22. Verify the *node exporter* by checking the any metrics from Grafana such CPU, disk space etc.
+
+## 3. Links
+
+*Microsite*: web.hy4dev.com
+
+*Monitoring*: monitoring.hy4dev.com
+
+Note: These urls may not live all the time as it serves for the bootcamp project only (temporary).  
