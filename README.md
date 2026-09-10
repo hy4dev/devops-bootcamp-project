@@ -99,7 +99,7 @@ ii. Policy Type - Customer Managed
 
 16. Verify the access to the microsite by with the domain name instead of the elastic IP and port.
 
-17. Open the created tunnel from Cloudflare and click `Add a connector` button. If the tunnel was not created before, create a Cloudflared-type tunnel.
+17. Open the created tunnel from Cloudflare and click *Add a connector* button. If the tunnel was not created before, create a *cloudflared*-type tunnel.
 
 18. As the OS of all EC2s is Ubuntu, select the OS as Debian and you will see the two commands to run.
 
