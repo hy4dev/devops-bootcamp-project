@@ -68,48 +68,52 @@ ii. Policy Type - Customer Managed
 
 3. Once you have done with `terraform apply`, you can see the output or run `terraform output`.
 
-4. Copy the command to SSM to controller server and execute it or you may SSM from AWS console.
+4. Please give a two to five minutes for batch script to finish before proceed to the next step.
 
-5. In SSM session of controller server, execute `bash` and then `cd`.
+5. Copy the command to SSM to controller server and execute it or you may SSM from AWS console.
 
-6. Please verify whether or not the `terraform apply` has successfully executed the command to install Ansible and SSM session plugin via batch script.
+6. In SSM session of controller server, execute `bash` and then `cd` to navigate to home folder.
+
+7. Please verify whether or not the `terraform apply` has successfully executed the command to install Ansible and SSM session plugin via batch script.
     - `ansible --version`
     - `session-manager-plugin --version`
 
-7. If not found, please install Ansible and SSM plugin.
+8. If not found, please install Ansible and SSM plugin.
 
-8. git clone https://github.com/hy4dev/devops-bootcamp-project.git
+9. git clone https://github.com/hy4dev/devops-bootcamp-project.git
 
-9. Since this is just a small project, please copy the content of *inventory.ini* that can be found from local machine and paste it to the newly created *inventory.ini* in ansible folder of controller server.
+10. Since this is just a small project, please copy the content of *inventory.ini* that can be found from local machine and paste it to the newly created *inventory.ini* in ansible folder of controller server.
 
-10. Run `ansible-playbook playbook-awscli.yaml` and verify the installation.
+11. Run `ansible-playbook playbook-awscli.yaml` and verify the installation. While it is crucial for controller server to be installed with AWS CLI, the script is instructed to install to all hosts as it may help when checking any issue especially at monitoring server. 
     - `aws --version`
 
-11. Run `ansible-galaxy install -r requirements-ansible-galaxy.yml` and verify the installation. This is to install *geerlingguy.docker*, *amazon.aws*, and *prometheus.prometheus*.
+12. Run `ansible-galaxy install -r requirements-ansible-galaxy.yml` and verify the installation. This is to install *geerlingguy.docker*, *amazon.aws*, and *prometheus.prometheus* to controller server.
     - `ansible-galaxy role list`
     - `ansible-galaxy collection list`
 
-12. Run `ansible-playbook playbook-monitoring.yaml`. This is to build the monitoring stack on monitoring server that consists of Prometheus and Grafana.
+13. Run `ansible-playbook playbook-monitoring.yaml`. This is to build the monitoring stack on monitoring server that consists of Prometheus and Grafana.
 
-13. Run `ansible-playbook playbook-web.yaml`. This is to build Docker-based microsite on web server which the image is pulled from ECR. 
+14. Run `ansible-playbook playbook-web.yaml`. This is to build Docker-based microsite on web server which the image is pulled from ECR. 
 
-14. Verify whether or not the microsite up and running by `http://{web_server_elastic_ip}:80`.
+15. Verify whether or not the microsite up and running by `http://{web_server_elastic_ip}:80`.
 
-15. If the microsite is up and running, then open the DNS records of Cloudflare and replace the IP with the latest elastic IP. If the record was not created before, create it and linked the IP to the *web* sub-domain. 
+16. If the microsite is up and running, then open the DNS records of Cloudflare and replace the IP with the latest elastic IP. If the record was not created before, create it and linked the IP to the *web* sub-domain. 
 
-16. Verify the access to the microsite by with the domain name instead of the elastic IP and port.
+17. Verify the access to the microsite by with the domain name instead of the elastic IP and port.
 
-17. Open the created tunnel from Cloudflare and click *Add a connector* button. If the tunnel was not created before, create a *cloudflared*-type tunnel.
+18. Open the created tunnel from Cloudflare and click *Add a connector* button. If the tunnel was not created before, create a *cloudflared*-type tunnel.
 
-18. As the OS of all EC2s is Ubuntu, select the OS as Debian and you will see the two commands to run.
+19. As the OS of all EC2s is Ubuntu, select the OS as Debian and you will see the two commands to run.
 
-19. Proceed to SSM to monitoring server and run `bash` and `cd`.
+20. Proceed to SSM to monitoring server and run `bash` and `cd` to navigate to home folder.
 
-20. Copy the commands and run it on controller server.
+21. Copy the commands and run it on monitoring server.
 
-21. If there is no issue, Cloudflare will show status of the tunnel as *Healthy* and you may veriy the access to Grafana.
+22. If there is no issue, Cloudflare will show status of the tunnel as *Healthy* and you may veriy the access to Prometheus and Grafana.
 
-22. Verify the *node exporter* by checking the any metrics from Grafana such CPU, disk space etc.
+23. Check the *Target Health* from Prometheus. It should show *node_exporter* and *prometheus* with the status as *UP*.   
+
+24. Verify the data source by checking the any metrics from Grafana such CPU, disk space etc. But before that, configure the data source, which is Prometheus and add the url link `http://prometheus:9090` and test the connection. 
 
 ## 3. Links
 
@@ -117,4 +121,8 @@ ii. Policy Type - Customer Managed
 
 *Monitoring*: monitoring.hy4dev.com
 
-Note: These urls may not live all the time as it serves for the bootcamp project only (temporary).  
+*Prometheus*: https://prometheus.hy4dev.com
+
+Notes: 
+- These urls may not live all the time as it serves for the bootcamp project only (temporary).
+- Prometheus is optional. It may be needed in case of need to verify the target status via UI.  
