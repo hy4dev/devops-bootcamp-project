@@ -121,7 +121,7 @@ ii. Policy Type - Customer Managed
 
 *Monitoring*: monitoring.hy4dev.com
 
-*Prometheus*: https://prometheus.hy4dev.com
+*Prometheus*: prometheus.hy4dev.com
 
 Notes: 
 - These urls may not live all the time as it serves for the bootcamp project only (temporary).
