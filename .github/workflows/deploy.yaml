@@ -25,3 +25,6 @@ jobs:
         with:
           path: app/dist
       - uses: actions/deploy-pages@v5
+    permissions:
+        pages: write
+        id-token: write
